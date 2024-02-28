@@ -13,7 +13,6 @@ import java.util.function.Function;
 @Configuration
 public class ApiGatewayConfiguration {
 
-
     @Bean
     public RouteLocator gatewayRouter(RouteLocatorBuilder builder) {
         return builder
@@ -25,16 +24,16 @@ public class ApiGatewayConfiguration {
                                 .addRequestParameter("test", "testvalue"))
                         .uri("http://httpbin.org:80"))
                 .route(p -> p
-                        .path("/currency-exchange/**")
-                        .uri("lb://currency-exchange"))
+                        .path("/currency-exchange/**")  //anstatt /currency-exchange/currency-exchange/path einzugeben, möchte ich nur über /currency-exchange/path die URL aufrufen
+                        .uri("lb://currency-exchange")) // Loadbalancing auf dem Path vom namen, der in Eureka hinterlegt ist
                 .route(p -> p
                         .path("/currency-conversion-feign/**")
                         .uri("lb://currency-conversion"))
                 .route(p -> p
                         .path("/currency-conversion-new/**")
                         .filters(f -> f.rewritePath(
-                                "/currency-conversion-new/(?<segment>.*)",
-                                "/currency-conversion-feign/${segment}"
+                                "/currency-conversion-new/(?<segment>.*)", //reguläre Expression, um nachkommende Segmente zu definieren...
+                                "/currency-conversion-feign/${segment}" // ... und hier wieder einzufügen
                         ))
                         .uri("lb://currency-conversion")
                 )
