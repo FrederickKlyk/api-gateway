@@ -27,6 +27,9 @@ public class ApiGatewayConfiguration {
                         .path("/currency-exchange/**")  //anstatt /currency-exchange/currency-exchange/path einzugeben, möchte ich nur über /currency-exchange/path die URL aufrufen
                         .uri("lb://currency-exchange")) // Loadbalancing auf dem Path vom namen, der in Eureka hinterlegt ist
                 .route(p -> p
+                        .path("/currency-conversion/**")
+                        .uri("lb://currency-conversion"))
+                .route(p -> p
                         .path("/currency-conversion-feign/**")
                         .uri("lb://currency-conversion"))
                 .route(p -> p
